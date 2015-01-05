@@ -1,5 +1,6 @@
 package core;
 
 public abstract class AnswerType {
-    protected abstract void addOption();
+    public abstract void addOption(Object o);
+    public abstract Object answer();
 }

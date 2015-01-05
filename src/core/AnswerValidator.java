@@ -1,5 +1,6 @@
 package core;
 
-public abstract class AnswerValidator {
+@FunctionalInterface
+public interface AnswerValidator {
     public abstract boolean validate(Object ans);
 }
