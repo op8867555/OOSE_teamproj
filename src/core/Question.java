@@ -14,11 +14,11 @@ public abstract class Question {
         return this.av.validate(this.ans);
     }
 
-   public void setAnswer(Object ans) {
+    public void setAnswer(Object ans) {
         this.ans = ans;
-   }
+    }
 
-   public void answer() {
-       this.ans = at.answer();
-   }
+    public void answer() {
+        this.ans = at.answer();
+    }
 }
