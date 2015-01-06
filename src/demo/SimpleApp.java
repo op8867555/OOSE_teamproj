@@ -1,10 +1,7 @@
 package demo;
 
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Arrays;
-
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
@@ -21,16 +18,47 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 
+import questionGenerator.LimitedQuestionGenerator;
 import questionGenerator.RandonizedQuestionGenerator;
-
 import screenGenerator.AlwaysShowResultScreenGenerator;
-
 import core.*;
-
 import crossAppliedTable.CrossApplication;
 
 public class SimpleApp {
     public static void main(String[] args) {
+        List<Integer> xs =
+            IntStream.range(1, 10).boxed()
+                     .collect(Collectors.toList());
+        BinaryMultiplicationCrossTable tab =
+            new BinaryMultiplicationCrossTable(xs, xs);
+
+        Function<CrossApplication<Integer>, List<Integer>> optionsGen =
+            app -> {
+                List<Integer> opts =
+                    Arrays.asList((app.getA() + 1) * app.getB(),
+                            (app.getA() - 1) * app.getB(),
+                            app.getA() * (app.getB() - 1),
+                            1,
+                            app.getA() * (app.getB() + 1));
+                Collections.shuffle(opts);
+                opts = opts.stream().limit(3).collect(Collectors.toList());
+                opts.add(app.getX());
+                Collections.shuffle(opts);
+                return opts;
+            };
+
+
+        QuestionGenerator qg =
+            new LimitedQuestionGenerator(5,
+                    new RandonizedQuestionGenerator(
+                        new BinaryMultiplicationQuestionGenerator(tab,
+                            optionsGen)));
+
+        ScreenGenerator sg = new AlwaysShowResultScreenGenerator(qg);
+
+        MainView view = new MainView(sg);
+
+        view.render(null);
     }
 }
 
@@ -60,43 +88,10 @@ class MainView {
             render(null);
         } else {
             JOptionPane.showMessageDialog(null, "作答結束");
+            frame.setVisible(false);
+            frame.dispose();
+            System.exit(0);
         }
-    }
-
-    public static void main (String[] args) {
-
-        List<Integer> xs =
-            IntStream.range(1, 10).boxed()
-                     .collect(Collectors.toList());
-        BinaryMultiplicationCrossTable tab =
-            new BinaryMultiplicationCrossTable(xs, xs);
-
-        Function<CrossApplication<Integer>, List<Integer>> optionsGen =
-            app -> {
-                List<Integer> opts =
-                    Arrays.asList((app.getA() + 1) * app.getB(),
-                            (app.getA() - 1) * app.getB(),
-                            app.getA() * (app.getB() - 1),
-                            1,
-                            app.getA() * (app.getB() + 1));
-                Collections.shuffle(opts);
-                opts = opts.stream().limit(3).collect(Collectors.toList());
-                opts.add(app.getX());
-                Collections.shuffle(opts);
-                return opts;
-            };
-
-
-        QuestionGenerator qg =
-            new RandonizedQuestionGenerator(
-                    new BinaryMultiplicationQuestionGenerator(tab,
-                    optionsGen));
-
-        ScreenGenerator sg = new AlwaysShowResultScreenGenerator(qg);
-
-        MainView view = new MainView(sg);
-
-        view.render(null);
     }
 }
 

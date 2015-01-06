@@ -8,11 +8,12 @@ import java.util.Queue;
 import core.Question;
 import core.QuestionGenerator;
 
-public class RandonizedQuestionGenerator extends QuestionGenerator {
+public class RandonizedQuestionGenerator extends QuestionGeneratorCombinator {
 
     List<Question> qs = new LinkedList<Question>();
 
     public RandonizedQuestionGenerator(QuestionGenerator qg) {
+        super(qg);
 
         for (Question q = qg.getNextQuestion();
                q != null;
