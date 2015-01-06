@@ -1,5 +1,7 @@
 package demo;
 
+import java.awt.BorderLayout;
+import java.awt.Font;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -9,6 +11,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JComponent;
@@ -110,13 +113,16 @@ class AnsweringScreenView {
         JButton submitBtn = new JButton("submit");
         Question q = scr.getQuestion();
         options.removeAll();
-
         List<JRadioButton> btns = new ArrayList<JRadioButton>();
         ButtonGroup bg = new ButtonGroup();
 
         q.getOptions().forEach(obj -> {
             Integer o = (Integer) obj;
             JRadioButton btn = new JRadioButton(o.toString());
+            //調整字體
+            Font font = btn.getFont();
+            btn.setFont(new Font(font.getName(), Font.PLAIN, 20));
+            
             btns.add(btn);
             options.add(btn);
             bg.add(btn);
@@ -130,15 +136,20 @@ class AnsweringScreenView {
         });
 
         this.panel.removeAll();
-        this.panel.add(displayQuestion(q));
-        this.panel.add(options);
-        this.panel.add(submitBtn);
+        this.panel.setLayout(new BorderLayout());
+        this.panel.add(displayQuestion(q), BorderLayout.NORTH);
+        this.panel.add(options, BorderLayout.CENTER);
+        this.panel.add(submitBtn, BorderLayout.SOUTH);
         return this.panel;
     }
 
     static JComponent displayQuestion(Question rq) {
         BinaryMultiplicationQuestion q = (BinaryMultiplicationQuestion) rq;
-        return new JLabel(q.getA() + " * " + q.getB() + " = " + " ?\n", JLabel.CENTER);
+        JLabel l = new JLabel(q.getA() + " * " + q.getB() + " = " + " ?\n", JLabel.CENTER);
+        //調整字體
+        Font font = l.getFont();
+        l.setFont(new Font(font.getName(), Font.BOLD, 32));
+        return l;
     }
 }
 
