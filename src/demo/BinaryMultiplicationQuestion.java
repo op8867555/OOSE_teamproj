@@ -10,9 +10,8 @@ public class BinaryMultiplicationQuestion extends Question {
 
     private Integer a, b;
 
-    public BinaryMultiplicationQuestion(AnswerType at, Integer a, Integer b, Integer x, List<Integer> options) {
-        super(new EqualityAnswerValidator<Integer>(x), at);
-        options.stream().forEach(i -> at.addOption(i));
+    public BinaryMultiplicationQuestion(Integer a, Integer b, Integer x, List<Integer> options) {
+        super(new EqualityAnswerValidator<Integer>(x), options);
         this.a = a;
         this.b = b;
     }

@@ -1,15 +1,18 @@
 package demo;
 
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Arrays;
+
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 import javax.swing.ButtonGroup;
-import javax.swing.ButtonModel;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
@@ -18,14 +21,50 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 
+import questionGenerator.RandonizedQuestionGenerator;
+
 import screenGenerator.AlwaysShowResultScreenGenerator;
+
 import core.*;
+
 import crossAppliedTable.CrossApplication;
 
 public class SimpleApp {
     public static void main(String[] args) {
-        JPanel options = new JPanel();
-        SingleChoice sc = new SingleChoice(options);
+    }
+}
+
+class MainView {
+    protected JFrame frame = new JFrame();
+    protected ScreenGenerator sg;
+
+    public MainView(ScreenGenerator sg) {
+        this.sg = sg;
+    }
+
+    public void render(Question answered) {
+        Screen s = sg.getNextScreen(answered);
+        if (s instanceof AnsweringScreen) {
+            AnsweringScreenView asv =
+                new AnsweringScreenView(scr -> {
+                    render(scr.getQuestion());
+                });
+            frame.getContentPane().removeAll();
+            JPanel p = asv.render((AnsweringScreen) s);
+            frame.add(p);
+            frame.pack();
+            frame.setVisible(true);
+        } else if (s instanceof ResultScreen) {
+            Question q = (Question) ((ResultScreen) s).getResult();
+            JOptionPane.showMessageDialog(null, q.validate() ? "正確" : "錯誤");
+            render(null);
+        } else {
+            JOptionPane.showMessageDialog(null, "作答結束");
+        }
+    }
+
+    public static void main (String[] args) {
+
         List<Integer> xs =
             IntStream.range(1, 10).boxed()
                      .collect(Collectors.toList());
@@ -33,135 +72,78 @@ public class SimpleApp {
             new BinaryMultiplicationCrossTable(xs, xs);
 
         Function<CrossApplication<Integer>, List<Integer>> optionsGen =
-            app -> Arrays.asList(app.getX(), app.getA() + 1, app.getB() - 1);
+            app -> {
+                List<Integer> opts =
+                    Arrays.asList((app.getA() + 1) * app.getB(),
+                            (app.getA() - 1) * app.getB(),
+                            app.getA() * (app.getB() - 1),
+                            1,
+                            app.getA() * (app.getB() + 1));
+                Collections.shuffle(opts);
+                opts = opts.stream().limit(3).collect(Collectors.toList());
+                opts.add(app.getX());
+                Collections.shuffle(opts);
+                return opts;
+            };
 
-        BinaryMultiplicationQuestionGenerator qg =
-            new BinaryMultiplicationQuestionGenerator(tab,
-                    sc,
-                    optionsGen);
 
-        AlwaysShowResultScreenGenerator sg = new AlwaysShowResultScreenGenerator(qg);
+        QuestionGenerator qg =
+            new RandonizedQuestionGenerator(
+                    new BinaryMultiplicationQuestionGenerator(tab,
+                    optionsGen));
 
-        AnsweringScreenView asv = new AnsweringScreenView(options);
-        JFrame f = new JFrame();
-        f.add(asv.render((AnsweringScreen) sg.getNextScreen(null)));
-        f.pack();
-        f.setVisible(true);
-    }
-}
+        ScreenGenerator sg = new AlwaysShowResultScreenGenerator(qg);
 
-class MainView {
-    protected JPanel panel;
-    protected JFrame frame;
-    protected JPanel options;
-    protected ScreenGenerator sg;
+        MainView view = new MainView(sg);
 
-    public MainView(ScreenGenerator sg, JPanel options) {
-        this.options = options;
-        this.sg = sg;
-    }
-
-    public void render() {
-        Screen s = sg.getNextScreen(null);
-        if (s instanceof AnsweringScreen) {
-            JPanel options = new JPanel();
-            AnsweringScreenView asv = new AnsweringScreenView();
-            f.add(.render((AnsweringScreen) s));
-        } else if (s instanceof ResultScreen) {
-            ResultScreen scr = (ResultScreen) s;
-            JPanel p = new JPanel();
-            return p;
-        }
-        return new JPanel();
+        view.render(null);
     }
 }
 
 class AnsweringScreenView {
     protected JPanel panel;
     protected JPanel options;
+    protected Consumer<AnsweringScreen> callback;
 
-    public AnsweringScreenView(JPanel options) {
+    public AnsweringScreenView(Consumer<AnsweringScreen> callback) {
         this.panel = new JPanel();
-        this.options = options;
+        this.options = new JPanel();
+        this.callback = callback;
     }
 
     public JPanel render(AnsweringScreen scr) {
         JButton submitBtn = new JButton("submit");
         Question q = scr.getQuestion();
+        options.removeAll();
+
+        List<JRadioButton> btns = new ArrayList<JRadioButton>();
+        ButtonGroup bg = new ButtonGroup();
+
+        q.getOptions().forEach(obj -> {
+            Integer o = (Integer) obj;
+            JRadioButton btn = new JRadioButton(o.toString());
+            btns.add(btn);
+            options.add(btn);
+            bg.add(btn);
+        });
+
         submitBtn.addActionListener(e -> {
-            q.answer();
-            JOptionPane.showMessageDialog(null, q.validate());
+            for (JRadioButton btn : btns)
+                if (btn.isSelected())
+                    q.setAnswer(new Integer(btn.getText()));
+            callback.accept(scr);
         });
 
         this.panel.removeAll();
-        this.panel.add(Displayer.displayQuestion(q));
+        this.panel.add(displayQuestion(q));
         this.panel.add(options);
         this.panel.add(submitBtn);
         return this.panel;
-    }
-
-}
-
-class SingleChoice extends AnswerType {
-
-    List<JRadioButton> btns = new ArrayList<JRadioButton>();
-    JPanel p;
-    ButtonGroup bg = new ButtonGroup();
-
-    public SingleChoice(JPanel p) {
-        this.p = p;
-        p.removeAll();
-    }
-
-    @Override
-    public void addOption(Object o) {
-        JRadioButton btn = new JRadioButton(o.toString());
-        btns.add(btn);
-        p.add(btn);
-        bg.add(btn);
-    }
-
-    @Override
-    public Object answer() {
-        for (JRadioButton btn : btns)
-            if (btn.isSelected())
-                return new Integer(btn.getText());
-        return null;
-    }
-
-    public JPanel getPanel() {
-        return this.p;
-    }
-}
-
-
-class Displayer {
-    static JComponent displayScreen(Screen s) {
-        if (s instanceof AnsweringScreen) {
-            AnsweringScreen scr = (AnsweringScreen) s;
-            JPanel p = new JPanel();
-            p.add(Displayer.displayQuestion(scr.getQuestion()));
-            return p;
-        } else if (s instanceof ResultScreen) {
-            ResultScreen scr = (ResultScreen) s;
-            JPanel p = new JPanel();
-            return p;
-        }
-        return new JPanel();
     }
 
     static JComponent displayQuestion(Question rq) {
         BinaryMultiplicationQuestion q = (BinaryMultiplicationQuestion) rq;
         return new JLabel(q.getA() + " * " + q.getB() + " = " + " ?\n", JLabel.CENTER);
     }
-
-    static JComponent displayOptions(List<Integer> xs) {
-        ButtonGroup group = new ButtonGroup();
-        Stream<JRadioButton> btns =
-            xs.stream().map(x -> new JRadioButton(x+""));
-        JPanel p = new JPanel();
-        btns.forEach(group::add);
-        btns.forEach(p::add);
-        return p;
-    }
 }
+

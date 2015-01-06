@@ -14,22 +14,20 @@ public class BinaryMultiplicationQuestionGenerator extends
 
     protected Function<CrossApplication<Integer>, List<Integer>> optionGenerator;
 
-    public BinaryMultiplicationQuestionGenerator(CrossAppliedTable<Integer> t,
-            AnswerType at) {
-        super(t, at);
+    public BinaryMultiplicationQuestionGenerator(CrossAppliedTable<Integer> t) {
+        super(t);
     }
 
     public BinaryMultiplicationQuestionGenerator(
             CrossAppliedTable<Integer> t,
-            AnswerType at,
             Function<CrossApplication<Integer>, List<Integer>> optionGenerator) {
-        super(t, at);
+        super(t);
         this.optionGenerator = optionGenerator;
     }
 
     @Override
     protected Question generateQuestion(CrossApplication<Integer> app) {
-        return new BinaryMultiplicationQuestion(this.at, app.getA(),
+        return new BinaryMultiplicationQuestion(app.getA(),
                 app.getB(), app.getX(), generateOptions(app));
     }
 

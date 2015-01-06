@@ -24,11 +24,15 @@ public class AlwaysShowResultScreenGenerator extends ScreenGenerator {
         if (st.equals(State.START) || st.equals(State.ANSWERING)) {
             lastAnswered = answered;
             Question q = qg.getNextQuestion();
+            if (q == null)
+                return EndScreen.getInstance();
+            st = State.RESULT;
             return new AnsweringScreen(q);
         } else if (st.equals(State.RESULT)) {
+            st = State.ANSWERING;
             return new ResultScreen(answered);
         } else {
-            return EndScreen.getInstance();
+            return null;
         }
     }
 

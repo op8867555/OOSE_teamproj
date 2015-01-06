@@ -23,4 +23,8 @@ abstract public class CrossAppliedTable <T> {
         return ls.get(idx);
     }
 
+    public int size() {
+        return ls.size();
+    }
+
 }

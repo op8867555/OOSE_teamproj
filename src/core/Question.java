@@ -1,13 +1,15 @@
 package core;
 
+import java.util.List;
+
 public abstract class Question {
     protected AnswerValidator av;
-    protected AnswerType at;
     protected Object ans;
+    protected List<?> options;
 
-    public Question(AnswerValidator av, AnswerType at) {
+    public Question(AnswerValidator av, List<Integer> options2) {
         this.av = av;
-        this.at = at;
+        this.options = options2;
     }
 
     public boolean validate() {
@@ -18,7 +20,7 @@ public abstract class Question {
         this.ans = ans;
     }
 
-    public void answer() {
-        this.ans = at.answer();
+    public List<?> getOptions() {
+        return this.options;
     }
 }

@@ -51,7 +51,7 @@ abstract public class JsonConfiguredQuestionGenerator extends QuestionGenerator 
                         String qs = o.getString("question");
                         Integer a = o.getInt("answer");
                         Question q = new Question(
-                                new EqualityAnswerValidator<Integer>(a), at) {
+                                new EqualityAnswerValidator<Integer>(a), null) {
                                 };
                         System.out.println(qs);
                         System.out.println(a);

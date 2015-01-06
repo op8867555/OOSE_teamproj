@@ -2,7 +2,6 @@ package crossAppliedTable;
 
 import java.util.List;
 
-import core.AnswerType;
 import core.Question;
 import core.QuestionGenerator;
 
@@ -10,15 +9,12 @@ abstract public class CrossTableMultiplicationQuestionGenerator <T>
     extends QuestionGenerator {
 
     protected CrossAppliedTable<T> t;
-    protected AnswerType at;
 
     protected int currentQuestionIndex = 0;
 
 
-    public CrossTableMultiplicationQuestionGenerator(CrossAppliedTable<T> t,
-            AnswerType at) {
+    public CrossTableMultiplicationQuestionGenerator(CrossAppliedTable<T> t) {
         this.t = t;
-        this.at = at;
     }
 
     abstract protected Question generateQuestion(CrossApplication<T> app);
@@ -26,6 +22,8 @@ abstract public class CrossTableMultiplicationQuestionGenerator <T>
 
     @Override
     public Question getNextQuestion() {
+        if (currentQuestionIndex >= t.size())
+            return null;
         Question q = generateQuestion(t.get(currentQuestionIndex));
         currentQuestionIndex += 1;
         return q;
