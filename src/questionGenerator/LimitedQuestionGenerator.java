@@ -5,8 +5,7 @@ import core.QuestionGenerator;
 
 public class LimitedQuestionGenerator extends QuestionGeneratorCombinator {
 
-    protected QuestionGenerator qg;
-    protected int max = 10;
+	protected int max = 10;
     protected int count = 0;
 
     public LimitedQuestionGenerator(QuestionGenerator qg) {
