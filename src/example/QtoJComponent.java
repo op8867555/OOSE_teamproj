@@ -21,6 +21,7 @@ public class QtoJComponent extends Question {
 		// TODO Auto-generated constructor stub
 	}
 
+	
 	public static void main(String args[]) {
 		JFrame frame = new JFrame();
 		frame.setTitle("test");

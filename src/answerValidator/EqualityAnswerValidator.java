@@ -2,17 +2,17 @@ package answerValidator;
 
 import core.AnswerValidator;
 
-public class EqualityAnswerValidator implements AnswerValidator {
+public class EqualityAnswerValidator<T> implements AnswerValidator {
 
-    Object rightAns;
+    T rightAns;
 
-    public EqualityAnswerValidator(Object rightAns) {
+    public EqualityAnswerValidator(T rightAns) {
         this.rightAns = rightAns;
     }
 
     @Override
     public boolean validate(Object ans) {
-        return ans.equals(rightAns);
+        return rightAns.equals(ans);
     }
 
 }
