@@ -1,7 +1,7 @@
 package core;
 
 public class AnsweringScreen extends Screen {
-    Question q;
+    protected Question q;
 
     public AnsweringScreen(Question q) {
         this.q = q;

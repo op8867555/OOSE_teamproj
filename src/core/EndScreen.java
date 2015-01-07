@@ -1,7 +1,7 @@
 package core;
 
 public class EndScreen extends Screen {
-    private EndScreen() {}
+    protected EndScreen() {}
     private static EndScreen inst;
     public static EndScreen getInstance() {
         if (inst == null)

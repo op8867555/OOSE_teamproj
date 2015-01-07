@@ -27,10 +27,10 @@ public class AlwaysShowResultScreenGenerator extends ScreenGenerator {
             if (q == null)
                 return EndScreen.getInstance();
             st = State.RESULT;
-            return new AnsweringScreen(q);
+            return createAnsweringScreen(q);
         } else if (st.equals(State.RESULT)) {
             st = State.ANSWERING;
-            return new ResultScreen(answered);
+            return createResultScreen(answered);
         } else {
             return null;
         }

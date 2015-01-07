@@ -1,6 +1,7 @@
 package demo;
 
 import java.awt.BorderLayout;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -11,7 +12,6 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JComponent;
@@ -59,17 +59,54 @@ public class SimpleApp {
 
         ScreenGenerator sg = new AlwaysShowResultScreenGenerator(qg);
 
-        MainView view = new MainView(sg);
 
-        view.render(null);
+        TestView view = new TestView(sg);
+        MainCtrl ctrl = new MainCtrl(view);
+
+        ctrl.getFrame().setVisible(true);
     }
 }
 
-class MainView {
+abstract class View {
     protected JFrame frame = new JFrame();
+    public JFrame getFrame() {
+        return frame;
+    }
+
+}
+
+
+class MainCtrl extends View {
+    protected TestView testView;
+    public MainCtrl(TestView testView) {
+        super();
+        this.frame.setLayout(new FlowLayout());
+        this.testView = testView;
+        JButton startBtn = new JButton("開始作答");
+        JButton exitBtn  = new JButton("離開");
+        startBtn.addActionListener(e -> {
+            this.frame.setVisible(false);
+            this.testView.render(null);
+        });
+
+        exitBtn.addActionListener(e -> {
+            this.frame.setVisible(false);
+            this.frame.dispose();
+            System.exit(0);
+        });
+        frame.add(startBtn);
+        frame.add(exitBtn);
+        frame.setSize(300, 200);
+    }
+
+}
+
+class TestView extends View {
+
     protected ScreenGenerator sg;
 
-    public MainView(ScreenGenerator sg) {
+    public TestView(ScreenGenerator sg) {
+        super();
         this.sg = sg;
     }
 
@@ -122,16 +159,16 @@ class AnsweringScreenView {
             //調整字體
             Font font = btn.getFont();
             btn.setFont(new Font(font.getName(), Font.PLAIN, 20));
-            
+
             btns.add(btn);
             options.add(btn);
             bg.add(btn);
         });
 
         submitBtn.addActionListener(e -> {
-            for (JRadioButton btn : btns)
-                if (btn.isSelected())
-                    q.setAnswer(new Integer(btn.getText()));
+            q.setAnswer(btns.stream().filter(JRadioButton::isSelected).findFirst()
+                    .map(JRadioButton::getText)
+                    .map(Integer::new).orElse(null));
             callback.accept(scr);
         });
 

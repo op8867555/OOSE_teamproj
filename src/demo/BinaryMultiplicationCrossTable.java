@@ -4,7 +4,7 @@ import java.util.List;
 
 import crossAppliedTable.CrossAppliedTable;
 
-class BinaryMultiplicationCrossTable extends CrossAppliedTable<Integer> {
+public class BinaryMultiplicationCrossTable extends CrossAppliedTable<Integer> {
 
     public BinaryMultiplicationCrossTable(List<Integer> as, List<Integer> bs) {
         super(as, bs);
