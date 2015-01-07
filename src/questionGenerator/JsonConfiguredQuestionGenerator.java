@@ -26,9 +26,17 @@ abstract public class JsonConfiguredQuestionGenerator extends QuestionGenerator 
         this.config = new JSONObject(raw_config);
         this.questions = config.getJSONArray("questions");
     }
+    
+    public JsonConfiguredQuestionGenerator(JSONObject o){
+        this.config = o;
+        this.questions = config.getJSONArray("questions");
+    }
+
 
     @Override
     public Question getNextQuestion() {
+        if (currentQuestionIndex >= questions.length())
+        	return null;
         Question q = parseQuestion(questions.getJSONObject(currentQuestionIndex));
         currentQuestionIndex += 1;
         return q;

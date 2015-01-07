@@ -15,6 +15,23 @@ import javax.swing.JPanel;
 import core.AnsweringScreen;
 import core.Question;
 
+class JRadioButtonValued extends JRadioButton {
+    protected Object value;
+
+    public JRadioButtonValued(Object value) {
+        super();
+        this.value = value;
+    }
+
+    public Object getValue() {
+        return value;
+    }
+
+    public void setValue(Object value) {
+        this.value = value;
+    }
+}
+
 public class AnsweringScreenSwing
     extends AnsweringScreen
     implements SwingRenderable {
@@ -35,8 +52,8 @@ public class AnsweringScreenSwing
         ButtonGroup bg = new ButtonGroup();
 
         q.getOptions().forEach(obj -> {
-            Integer o = (Integer) obj;
-            JRadioButton btn = new JRadioButton(o.toString());
+            JRadioButton btn = new JRadioButtonValued(obj);
+            btn.setText(obj.toString());
             //調整字體
             Font font = btn.getFont();
             btn.setFont(new Font(font.getName(), Font.PLAIN, 20));
@@ -47,8 +64,8 @@ public class AnsweringScreenSwing
         });
         submitBtn.addActionListener(e -> {
             q.setAnswer(btns.stream().filter(JRadioButton::isSelected).findFirst()
-                    .map(JRadioButton::getText)
-                    .map(Integer::new).orElse(null));
+                    .map(x -> ((JRadioButtonValued)x).getValue())
+                    .orElse(null));
             callback.accept(this);
         });
 

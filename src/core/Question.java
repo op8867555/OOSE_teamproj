@@ -7,7 +7,7 @@ public abstract class Question {
     protected Object ans;
     protected List<?> options;
 
-    public Question(AnswerValidator av, List<Integer> options2) {
+    public Question(AnswerValidator av, List<?> options2) {
         this.av = av;
         this.options = options2;
     }
