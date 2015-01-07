@@ -33,6 +33,7 @@ import demo.*;
 
 public class SimpleApp {
 
+    JFrame startingFrame = new JFrame();
     JFrame frame = new JFrame();
     JButton startBtn = new JButton("開始作答");
     JButton exitBtn = new JButton("離開");
@@ -40,7 +41,7 @@ public class SimpleApp {
 
     public SimpleApp() {
 
-        frame.setLayout(new FlowLayout());
+        startingFrame.setLayout(new FlowLayout());
         JLabel welcomeLabel = new JLabel("歡迎使用這個有點鳥的幼教系統~");
 
         Font font = welcomeLabel.getFont();
@@ -65,13 +66,12 @@ public class SimpleApp {
 
         });
 
-
-        frame.add(welcomeLabel);
-        frame.add(startBtn);
-        frame.add(learnBtn);
-        frame.add(exitBtn);
-        frame.setSize(800,600);
-        frame.setVisible(true);
+        startingFrame.add(welcomeLabel);
+        startingFrame.add(startBtn);
+        startingFrame.add(learnBtn);
+        startingFrame.add(exitBtn);
+        startingFrame.setSize(800,600);
+        startingFrame.setVisible(true);
     }
 
     public void render(Screen screen) {
@@ -79,8 +79,8 @@ public class SimpleApp {
         if (screen == EndScreen.getInstance()) {
             JOptionPane.showMessageDialog(null, "bye");
             frame.setVisible(false);
-            frame.dispose();
-            System.exit(0);
+            startingFrame.setVisible(true);
+            return;
         }
 
         SwingRenderable r = (SwingRenderable) screen;
@@ -116,6 +116,7 @@ public class SimpleApp {
         };
 
         app.startBtn.addActionListener(e -> {
+            app.startingFrame.setVisible(false);
             app.render(sg.getNextScreen(null));
         });
     }
