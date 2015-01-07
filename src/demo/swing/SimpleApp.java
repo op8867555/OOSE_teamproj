@@ -74,7 +74,7 @@ public class SimpleApp {
         frame.setVisible(true);
     }
 
-    public void render(Screen, screen) {
+    public void render(Screen screen) {
 
         if (screen == EndScreen.getInstance()) {
             JOptionPane.showMessageDialog(null, "bye");
