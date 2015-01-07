@@ -99,6 +99,7 @@ public class SimpleApp {
             @Override
             protected ResultScreen createResultScreen(Object o) {
                 ResultScreenSwing s = new ResultScreenSwing(o);
+                JOptionPane.showMessageDialog(null, ((Question) s.getResult()).validate() ? "正確" : "錯誤");
                 return s;
             }
         };
