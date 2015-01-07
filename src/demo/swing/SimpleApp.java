@@ -95,29 +95,37 @@ public class SimpleApp {
 
         Config config = new Config("config");
         SimpleApp app = new SimpleApp();
-        QuestionGenerator qg = config.createQuestionGenerator();
-        //getDefaultQuestionGenerator();
-        ScreenGenerator sg = new AlwaysShowResultScreenGenerator(qg) {
-            @Override
-            protected AnsweringScreen createAnsweringScreen(Question q) {
-                AnsweringScreenSwing s = new AnsweringScreenSwing(q);
-                s.setCallback(scr -> {
-                    getNextScreen(scr.getQuestion());
-                    app.render(getNextScreen(null));
-                });
-                return s;
-            }
-            @Override
-            protected ResultScreen createResultScreen(Object o) {
-                ResultScreenSwing s = new ResultScreenSwing(o);
-                JOptionPane.showMessageDialog(null, ((Question) s.getResult()).validate() ? "正確" : "錯誤");
-                return s;
-            }
-        };
 
         app.startBtn.addActionListener(e -> {
-            app.startingFrame.setVisible(false);
-            app.render(sg.getNextScreen(null));
+            try {
+                QuestionGenerator qg = config.createQuestionGenerator();
+                ScreenGenerator sg = new AlwaysShowResultScreenGenerator(qg) {
+                    @Override
+                    protected AnsweringScreen createAnsweringScreen(Question q) {
+                        AnsweringScreenSwing s = new AnsweringScreenSwing(q);
+                        s.setCallback(scr -> {
+                            getNextScreen(scr.getQuestion());
+                            app.render(getNextScreen(null));
+                        });
+                        return s;
+                    }
+                    @Override
+                    protected ResultScreen createResultScreen(Object o) {
+                        ResultScreenSwing s = new ResultScreenSwing(o);
+                        JOptionPane.showMessageDialog(null, ((Question) s.getResult()).validate() ? "正確" : "錯誤");
+                        return s;
+                    }
+                };
+                app.startingFrame.setVisible(false);
+                app.render(sg.getNextScreen(null));
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(null, "ERROR");
+                app.startingFrame.setVisible(false);
+                app.startingFrame.dispose();
+                app.frame.setVisible(false);
+                app.frame.dispose();
+                System.exit(0);
+            }
         });
     }
 
