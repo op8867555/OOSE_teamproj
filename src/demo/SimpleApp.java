@@ -12,7 +12,9 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+
 import javax.swing.ButtonGroup;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
@@ -20,6 +22,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
+
 
 import questionGenerator.LimitedQuestionGenerator;
 import questionGenerator.RandonizedQuestionGenerator;
@@ -82,11 +85,41 @@ class MainCtrl extends View {
         super();
         this.frame.setLayout(new FlowLayout());
         this.testView = testView;
+        JLabel welcom = new JLabel("歡迎使用這個有點鳥的幼教系統~");
         JButton startBtn = new JButton("開始作答");
+        JButton learnBtn = new JButton("學習");
         JButton exitBtn  = new JButton("離開");
         startBtn.addActionListener(e -> {
             this.frame.setVisible(false);
             this.testView.render(null);
+        });
+        
+        Font font = welcom.getFont();
+        welcom.setFont(new Font(font.getName(), Font.PLAIN, 50));
+        startBtn.setFont(new Font(font.getName(), Font.PLAIN, 30));
+        learnBtn.setFont(new Font(font.getName(), Font.PLAIN, 30));
+        exitBtn.setFont(new Font(font.getName(), Font.PLAIN, 30));
+        
+        learnBtn.addActionListener(e -> {
+        	startBtn.setVisible(false);
+        	exitBtn.setVisible(false);
+        	learnBtn.setVisible(false);
+        	
+        	JButton backBtn = new JButton("返回");
+        	frame.add(backBtn);
+        	
+        	backBtn.setFont(new Font(font.getName(), Font.PLAIN, 30));
+        	
+        	JLabel img = new JLabel(new ImageIcon(".\\img\\九九乘法表.jpg"));
+        	frame.add(img);
+        	
+        	backBtn.addActionListener(event -> {
+        		startBtn.setVisible(true);
+            	exitBtn.setVisible(true);
+            	learnBtn.setVisible(true);
+            	backBtn.setVisible(false);
+            	img.setVisible(false);
+        	});
         });
 
         exitBtn.addActionListener(e -> {
@@ -94,9 +127,11 @@ class MainCtrl extends View {
             this.frame.dispose();
             System.exit(0);
         });
+        frame.add(welcom);
         frame.add(startBtn);
+        frame.add(learnBtn);
         frame.add(exitBtn);
-        frame.setSize(300, 200);
+        frame.setSize(800, 640);
     }
 
 }
