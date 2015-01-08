@@ -1,5 +1,6 @@
 package demo.swing;
 
+import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.io.File;
@@ -24,11 +25,17 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import core.*;
+
 import questionGenerator.*;
+
 import crossAppliedTable.*;
+
 import screenGenerator.*;
+
 import question.SimpleQuestion;
+
 import answerValidator.*;
+
 import demo.*;
 
 public class SimpleApp {
@@ -42,7 +49,7 @@ public class SimpleApp {
     public SimpleApp() {
 
         startingFrame.setLayout(new FlowLayout());
-        JLabel welcomeLabel = new JLabel("歡迎使用這個有點鳥的幼教系統~");
+        JLabel welcomeLabel = new JLabel("歡迎使用~");
 
         Font font = welcomeLabel.getFont();
         welcomeLabel.setFont(new Font(font.getName(), Font.PLAIN, 50));
