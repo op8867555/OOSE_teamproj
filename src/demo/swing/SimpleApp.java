@@ -61,15 +61,6 @@ public class SimpleApp {
             System.exit(0);
         });
 
-        learnBtn.addActionListener(e -> {
-
-            File path =  new File("img", "九九乘法表.jpg");
-            JOptionPane.showMessageDialog(null,
-                    new ImageIcon(path.getAbsolutePath()),
-                    "學習", JOptionPane.PLAIN_MESSAGE);
-
-
-        });
 
         startingFrame.add(welcomeLabel, BorderLayout.NORTH);
         buttons.add(startBtn);
@@ -102,6 +93,17 @@ public class SimpleApp {
         Config config = new Config("config");
         SimpleApp app = new SimpleApp();
 
+        app.learnBtn.addActionListener(e -> {
+
+            String path =  config.getLearningImagePath();
+            if (path == "")
+                path = (new File("img", "九九乘法表.jpg")).getAbsolutePath();
+            JOptionPane.showMessageDialog(null,
+                    new ImageIcon(),
+                    "學習", JOptionPane.PLAIN_MESSAGE);
+
+
+        });
         app.startBtn.addActionListener(e -> {
             try {
                 QuestionGenerator qg = config.createQuestionGenerator();
@@ -110,8 +112,6 @@ public class SimpleApp {
                     protected AnsweringScreen createAnsweringScreen(Question q) {
                         AnsweringScreenSwing s = new AnsweringScreenSwing(q);
                         s.setCallback(scr -> {
-                            // getNextScreen(scr.getAnswer());
-                            // app.render(getNextScreen(null));
                             app.render(getNextScreen(scr.getAnswer()));
                         });
                         return s;
@@ -211,6 +211,7 @@ class Config {
                         createBinaryMultiplicationQuestionGenerator()));
         return qg;
     }
+
 }
 
 class JsonConfiguredSimpleQuestionGenerator
