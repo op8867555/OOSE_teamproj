@@ -1,13 +1,13 @@
 package demo.swing;
 
 import java.awt.BorderLayout;
+import java.awt.Font;
 import java.util.function.*;
 
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-
 import javax.swing.SwingConstants;
 
 import core.Answer;
@@ -26,17 +26,23 @@ public class ResultScreenSwing
     @Override
     public JComponent render() {
         JPanel p = new JPanel();
+        JPanel ptext = new JPanel();
         p.setLayout(new BorderLayout());
         JButton nextBtn = new JButton("繼續");
         JLabel result = new JLabel();
         Answer a = (Answer) this.result;
         result.setText(a.validate() ? "正確" : "錯誤");
-        result.setAlignmentX(SwingConstants.CENTER);
+        
+        //調整字體
+        Font font = result.getFont();
+        result.setFont(new Font(font.getName(), Font.PLAIN, 40));
+        
         nextBtn.addActionListener(event -> {
             callback.accept(this);
         });
-        p.add(result, BorderLayout.CENTER);
+        ptext.add(result, BorderLayout.CENTER);
         p.add(nextBtn, BorderLayout.SOUTH);
+        p.add(ptext);
         return p;
     }
 
