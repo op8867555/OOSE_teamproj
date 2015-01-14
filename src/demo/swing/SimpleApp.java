@@ -99,7 +99,7 @@ public class SimpleApp {
             if (path == "")
                 path = (new File("img", "九九乘法表.jpg")).getAbsolutePath();
             JOptionPane.showMessageDialog(null,
-                    new ImageIcon(),
+                    new ImageIcon(path),
                     "學習", JOptionPane.PLAIN_MESSAGE);
 
 
