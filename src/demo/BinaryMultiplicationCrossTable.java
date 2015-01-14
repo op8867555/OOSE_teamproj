@@ -6,12 +6,9 @@ import crossAppliedTable.CrossAppliedTable;
 
 public class BinaryMultiplicationCrossTable extends CrossAppliedTable<Integer> {
 
-    public BinaryMultiplicationCrossTable(List<Integer> as, List<Integer> bs) {
-        super(as, bs);
-    }
+	public BinaryMultiplicationCrossTable(List<Integer> as,
+			List<Integer> bs) {
+		super((a, b) -> a * b, as, bs);
+	}
 
-    @Override
-    protected Integer apply(Integer a, Integer b) {
-        return a * b;
-    }
 }

@@ -34,7 +34,7 @@ public class SimpleApp {
     public static void main(String[] args) {
         List<Integer> xs =
             IntStream.range(1, 10).boxed()
-                     .collect(Collectors.toList());
+            .collect(Collectors.toList());
         BinaryMultiplicationCrossTable tab =
             new BinaryMultiplicationCrossTable(xs, xs);
 
@@ -93,33 +93,33 @@ class MainCtrl extends View {
             this.frame.setVisible(false);
             this.testView.render(null);
         });
-        
+
         Font font = welcom.getFont();
         welcom.setFont(new Font(font.getName(), Font.PLAIN, 50));
         startBtn.setFont(new Font(font.getName(), Font.PLAIN, 30));
         learnBtn.setFont(new Font(font.getName(), Font.PLAIN, 30));
         exitBtn.setFont(new Font(font.getName(), Font.PLAIN, 30));
-        
+
         learnBtn.addActionListener(e -> {
-        	startBtn.setVisible(false);
-        	exitBtn.setVisible(false);
-        	learnBtn.setVisible(false);
-        	
-        	JButton backBtn = new JButton("返回");
-        	frame.add(backBtn);
-        	
-        	backBtn.setFont(new Font(font.getName(), Font.PLAIN, 30));
-        	
-        	JLabel img = new JLabel(new ImageIcon(".\\img\\九九乘法表.jpg"));
-        	frame.add(img);
-        	
-        	backBtn.addActionListener(event -> {
-        		startBtn.setVisible(true);
-            	exitBtn.setVisible(true);
-            	learnBtn.setVisible(true);
-            	backBtn.setVisible(false);
-            	img.setVisible(false);
-        	});
+            startBtn.setVisible(false);
+            exitBtn.setVisible(false);
+            learnBtn.setVisible(false);
+
+            JButton backBtn = new JButton("返回");
+            frame.add(backBtn);
+
+            backBtn.setFont(new Font(font.getName(), Font.PLAIN, 30));
+
+            JLabel img = new JLabel(new ImageIcon(".\\img\\九九乘法表.jpg"));
+            frame.add(img);
+
+            backBtn.addActionListener(event -> {
+                startBtn.setVisible(true);
+                exitBtn.setVisible(true);
+                learnBtn.setVisible(true);
+                backBtn.setVisible(false);
+                img.setVisible(false);
+            });
         });
 
         exitBtn.addActionListener(e -> {

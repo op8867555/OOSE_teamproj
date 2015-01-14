@@ -2,21 +2,22 @@ package crossAppliedTable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.BinaryOperator;
 
-abstract public class CrossAppliedTable <T> {
+public class CrossAppliedTable <T> {
     protected List<CrossApplication<T>> ls;
-
-    public CrossAppliedTable(List<T> as, List<T> bs) {
-        apply(as, bs);
+    protected BinaryOperator<T> applyFunction;
+    
+    public CrossAppliedTable(BinaryOperator<T> applyFunction, List<T> as, List<T> bs) {
+        this.applyFunction = applyFunction;
+    	apply(as, bs);
     }
-
-    abstract protected T apply(T a, T b);
 
     public void apply(List<T> as, List<T> bs) {
         ls = new ArrayList<CrossApplication<T>>();
         for (T a : as)
             for (T b : bs)
-                ls.add(new CrossApplication<T>(a, b, apply(a, b)));
+                ls.add(new CrossApplication<T>(a, b, applyFunction.apply(a, b)));
     }
 
     public CrossApplication<T> get(int idx) {

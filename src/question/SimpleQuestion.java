@@ -9,8 +9,8 @@ public class SimpleQuestion extends Question {
 
     protected String description;
 
-    public SimpleQuestion(AnswerValidator av, List<String> options2) {
-        super(av, options2);
+    public SimpleQuestion(AnswerValidator av, List<String> options) {
+        super(av, options);
     }
 
     public String getDescription() {

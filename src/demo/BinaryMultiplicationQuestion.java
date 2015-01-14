@@ -2,7 +2,6 @@ package demo;
 
 import java.util.List;
 
-import core.AnswerType;
 import core.Question;
 import answerValidator.*;
 

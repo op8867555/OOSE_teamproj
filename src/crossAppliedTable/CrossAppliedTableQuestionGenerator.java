@@ -5,7 +5,7 @@ import java.util.List;
 import core.Question;
 import core.QuestionGenerator;
 
-abstract public class CrossTableMultiplicationQuestionGenerator <T>
+abstract public class CrossAppliedTableQuestionGenerator <T>
     extends QuestionGenerator {
 
     protected CrossAppliedTable<T> t;
@@ -13,7 +13,7 @@ abstract public class CrossTableMultiplicationQuestionGenerator <T>
     protected int currentQuestionIndex = 0;
 
 
-    public CrossTableMultiplicationQuestionGenerator(CrossAppliedTable<T> t) {
+    public CrossAppliedTableQuestionGenerator(CrossAppliedTable<T> t) {
         this.t = t;
     }
 

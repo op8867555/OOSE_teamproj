@@ -12,10 +12,12 @@ import javax.swing.JRadioButton;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 
+import core.Answer;
 import core.AnsweringScreen;
 import core.Question;
 
 class JRadioButtonValued extends JRadioButton {
+    private static final long serialVersionUID = -4972180599889929173L;
     protected Object value;
 
     public JRadioButtonValued(Object value) {
@@ -50,6 +52,7 @@ public class AnsweringScreenSwing
         options.removeAll();
         List<JRadioButton> btns = new ArrayList<JRadioButton>();
         ButtonGroup bg = new ButtonGroup();
+        this.a = new Answer(q);
 
         q.getOptions().forEach(obj -> {
             JRadioButton btn = new JRadioButtonValued(obj);
@@ -63,7 +66,7 @@ public class AnsweringScreenSwing
             bg.add(btn);
         });
         submitBtn.addActionListener(e -> {
-            q.setAnswer(btns.stream().filter(JRadioButton::isSelected).findFirst()
+            a.setAnswer(btns.stream().filter(JRadioButton::isSelected).findFirst()
                     .map(x -> ((JRadioButtonValued)x).getValue())
                     .orElse(null));
             callback.accept(this);

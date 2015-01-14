@@ -3,14 +3,13 @@ package demo;
 import java.util.List;
 import java.util.function.Function;
 
-import core.AnswerType;
 import core.Question;
 import crossAppliedTable.CrossApplication;
 import crossAppliedTable.CrossAppliedTable;
-import crossAppliedTable.CrossTableMultiplicationQuestionGenerator;
+import crossAppliedTable.CrossAppliedTableQuestionGenerator;
 
 public class BinaryMultiplicationQuestionGenerator extends
-        CrossTableMultiplicationQuestionGenerator<Integer> {
+        CrossAppliedTableQuestionGenerator<Integer> {
 
     protected Function<CrossApplication<Integer>, List<Integer>> optionGenerator;
 

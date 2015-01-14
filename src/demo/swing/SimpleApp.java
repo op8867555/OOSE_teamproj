@@ -20,22 +20,17 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.ImageIcon;
+import javax.swing.JPanel;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import core.*;
-
 import questionGenerator.*;
-
 import crossAppliedTable.*;
-
 import screenGenerator.*;
-
 import question.SimpleQuestion;
-
 import answerValidator.*;
-
 import demo.*;
 
 public class SimpleApp {
@@ -48,11 +43,14 @@ public class SimpleApp {
 
     public SimpleApp() {
 
-        startingFrame.setLayout(new FlowLayout());
+        startingFrame.setLayout(new BorderLayout());
         JLabel welcomeLabel = new JLabel("歡迎使用~");
+        JPanel buttons = new JPanel(new FlowLayout());
 
         Font font = welcomeLabel.getFont();
         welcomeLabel.setFont(new Font(font.getName(), Font.PLAIN, 50));
+        welcomeLabel.setVerticalAlignment(JLabel.CENTER);
+        welcomeLabel.setHorizontalAlignment(JLabel.CENTER);
         startBtn.setFont(new Font(font.getName(), Font.PLAIN, 30));
         learnBtn.setFont(new Font(font.getName(), Font.PLAIN, 30));
         exitBtn.setFont(new Font(font.getName(), Font.PLAIN, 30));
@@ -73,10 +71,11 @@ public class SimpleApp {
 
         });
 
-        startingFrame.add(welcomeLabel);
-        startingFrame.add(startBtn);
-        startingFrame.add(learnBtn);
-        startingFrame.add(exitBtn);
+        startingFrame.add(welcomeLabel, BorderLayout.NORTH);
+        buttons.add(startBtn);
+        buttons.add(learnBtn);
+        buttons.add(exitBtn);
+        startingFrame.add(buttons, BorderLayout.CENTER);
         startingFrame.setSize(800,600);
         startingFrame.setVisible(true);
     }
@@ -84,7 +83,6 @@ public class SimpleApp {
     public void render(Screen screen) {
 
         if (screen == EndScreen.getInstance()) {
-            JOptionPane.showMessageDialog(null, "bye");
             frame.setVisible(false);
             startingFrame.setVisible(true);
             return;
@@ -94,6 +92,7 @@ public class SimpleApp {
         frame.getContentPane().removeAll();
         frame.add(r.render());
         frame.pack();
+        frame.setSize(800, 600);
         frame.setVisible(true);
     }
 
@@ -111,15 +110,18 @@ public class SimpleApp {
                     protected AnsweringScreen createAnsweringScreen(Question q) {
                         AnsweringScreenSwing s = new AnsweringScreenSwing(q);
                         s.setCallback(scr -> {
-                            getNextScreen(scr.getQuestion());
-                            app.render(getNextScreen(null));
+                            // getNextScreen(scr.getAnswer());
+                            // app.render(getNextScreen(null));
+                            app.render(getNextScreen(scr.getAnswer()));
                         });
                         return s;
                     }
                     @Override
                     protected ResultScreen createResultScreen(Object o) {
                         ResultScreenSwing s = new ResultScreenSwing(o);
-                        JOptionPane.showMessageDialog(null, ((Question) s.getResult()).validate() ? "正確" : "錯誤");
+                        s.setCallback(scr -> {
+                            app.render(getNextScreen(null));
+                        });
                         return s;
                     }
                 };
